@@ -1,5 +1,3 @@
-
-import { Brain } from "lucide-react";
 import QuestionTable from "../components/QuestionTable";
 
 export default function InterviewPrep() {

@@ -1,63 +1,36 @@
+import { Bell, Menu, Moon, Sun } from "lucide-react";
+import { useLocation } from "react-router-dom";
+import { iconButton } from "../ui";
 
-import { Bell, Menu, Moon, Search, Sun } from "lucide-react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+const PAGE_TITLES = {
+  "/": "Dashboard",
+  "/questions": "Questions",
+  "/dsa": "DSA Practice",
+  "/interview-prep": "Interview Prep",
+  "/settings": "Settings",
+};
 
 export default function Topbar({ onMenu, dark, onToggleTheme }) {
   const location = useLocation();
-  const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const searchable = ["/", "/questions", "/dsa", "/interview-prep"].includes(
-    location.pathname
-  );
-
-  function updateSearch(value) {
-    const params = new URLSearchParams(searchParams);
-
-    if (value.trim()) {
-      params.set("search", value);
-    } else {
-      params.delete("search");
-    }
-
-    setSearchParams(params, { replace: true });
-  }
+  const heading = PAGE_TITLES[location.pathname] ?? "Page not found";
 
   return (
-    <header className="topbar">
+    <header className="sticky top-0 z-20 flex h-[68px] items-center gap-[14px] border-b border-[#e4e8ee] bg-white/94 px-[30px] backdrop-blur-[14px] max-sm:h-[60px] max-sm:gap-[7px] max-sm:px-3 dark:border-[#354155] dark:bg-[rgb(27_37_52/95%)]">
       <button
-        className="icon-button mobile-menu-button"
+        className={`${iconButton} hidden! max-lg:inline-flex!`}
         onClick={onMenu}
         aria-label="Toggle sidebar"
       >
         <Menu size={21} />
       </button>
 
-      {searchable && (
-        <form
-          className="top-search-wrapper"
-          onSubmit={(event) => {
-            event.preventDefault();
-            if (location.pathname === "/") {
-              navigate(`/questions${searchParams.toString() ? `?${searchParams}` : ""}`);
-            }
-          }}
-        >
-          <Search size={17} className="search-icon" />
-          <input
-            key={location.pathname}
-            className="top-search"
-            aria-label="Search questions"
-            placeholder="Search questions..."
-            value={searchParams.get("search") || ""}
-            onChange={(event) => updateSearch(event.target.value)}
-          />
-        </form>
-      )}
+      <h1 className="truncate text-[clamp(23px,2vw,29px)] font-extrabold tracking-[-0.9px] text-[#172033] max-sm:text-2xl dark:text-[#eef2f7]">
+        {heading}
+      </h1>
 
-      <div className="topbar-actions">
+      <div className="ml-auto flex items-center gap-[5px] max-sm:gap-0">
         <button
-          className="icon-button"
+          className={iconButton}
           onClick={onToggleTheme}
           title="Toggle theme"
           aria-label="Toggle theme"
@@ -66,12 +39,12 @@ export default function Topbar({ onMenu, dark, onToggleTheme }) {
         </button>
 
         <button
-          className="icon-button notification-button"
+          className={iconButton}
           onClick={() => window.alert("You're all caught up!")}
           aria-label="Notifications"
         >
           <Bell size={19} />
-          <span className="notification-dot" />
+          <span className="absolute top-2 right-2 size-1.5 rounded-full bg-[#21a364] shadow-[0_0_0_2px_#fff]" />
         </button>
       </div>
     </header>
